@@ -2,6 +2,7 @@ import os
 import sys
 import time
 import warnings
+import argparse
 import cv2
 import numpy as np
 
@@ -72,7 +73,7 @@ class PersonRecognizer:
 
         print(f"[+] Finished loading. Total {total_enrolled} reference faces across {len(self.database)} people: {list(self.database.keys())}")
 
-    def enroll_live_person(self, name: str, cap, window_name: str = "InsightFace - Realtime Recognition"):
+    def enroll_live_person(self, name: str, cap, window_name: str = "InsightFace - Realtime Recognition", rotation: int = 0):
         """
         Interactively captures face photos from webcam with manual SPACEBAR trigger
         and [y/n] acceptance verification to ensure high quality and diverse angles.
@@ -96,16 +97,26 @@ class PersonRecognizer:
         print("    1. Look at the camera at desired angle (Front, Profile, Tilt, Smile).")
         print("    2. Press [SPACE] or [c] to CAPTURE a photo.")
         print("    3. Press [y] to ACCEPT and save the photo, or [n] to RETAKE.")
-        print("    4. Press [q] or [ESC] when you have captured enough angles.")
+        print("    4. Press [r] to ROTATE orientation (0° -> 90° -> 180° -> 270°).")
+        print("    5. Press [q] or [ESC] when you have captured enough angles.")
         print("=" * 60 + "\n")
 
         captured_count = 0
+        rotation_angle = int(rotation) % 360
 
         while True:
             ret, frame = cap.read()
             if not ret:
                 print("[-] Failed to read frame from webcam.")
                 break
+
+            # Apply stream rotation if needed
+            if rotation_angle == 90:
+                frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
+            elif rotation_angle == 180:
+                frame = cv2.rotate(frame, cv2.ROTATE_180)
+            elif rotation_angle == 270:
+                frame = cv2.rotate(frame, cv2.ROTATE_90_COUNTERCLOCKWISE)
 
             h, w, _ = frame.shape
             display_frame = frame.copy()
@@ -121,16 +132,20 @@ class PersonRecognizer:
 
             # Top info bar
             cv2.rectangle(display_frame, (0, 0), (w, 60), (30, 30, 30), -1)
-            cv2.putText(display_frame, f"ENROLLING: {name} | Captured: {captured_count} photos", (15, 25),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 255), 2)
-            cv2.putText(display_frame, "Set angle -> Press [SPACE] to capture | Press [q] when done", (15, 50),
+            cv2.putText(display_frame, f"ENROLLING: {name} | Captured: {captured_count} photos | Rot: {rotation_angle}°", (15, 25),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.65, (0, 255, 255), 2)
+            cv2.putText(display_frame, "Press [SPACE] capture | Press [r] rotate | Press [q] done", (15, 50),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.5, (200, 200, 200), 1)
 
-            cv2.imshow(window_name, display_frame)
+            self._show_frame(window_name, display_frame)
             key = cv2.waitKey(1) & 0xFF
 
             if key in (ord('q'), ord('Q'), 27):  # 'q' or ESC to finish
                 break
+
+            elif key in (ord('r'), ord('R')):
+                rotation_angle = (rotation_angle + 90) % 360
+                print(f"[*] Rotated stream orientation to: {rotation_angle}°")
 
             elif key in (ord(' '), ord('c'), ord('C')):
                 # Trigger capture
@@ -140,7 +155,7 @@ class PersonRecognizer:
                     cv2.rectangle(warn_frame, (50, h // 2 - 30), (w - 50, h // 2 + 30), (0, 0, 180), -1)
                     cv2.putText(warn_frame, "NO FACE DETECTED! Align face and try again.", (60, h // 2 + 8),
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.65, (255, 255, 255), 2)
-                    cv2.imshow(window_name, warn_frame)
+                    self._show_frame(window_name, warn_frame)
                     cv2.waitKey(800)
                     continue
 
@@ -158,7 +173,7 @@ class PersonRecognizer:
                 cv2.putText(preview_frame, "Press [y] = SAVE / ACCEPT   |   Press [n] = RETAKE / DISCARD", (15, h - 20),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
 
-                cv2.imshow(window_name, preview_frame)
+                self._show_frame(window_name, preview_frame)
                 print(f"[*] Captured potential photo. Accept this angle for '{name}'? [y/n]")
 
                 # Verification loop
@@ -185,7 +200,7 @@ class PersonRecognizer:
                         cv2.rectangle(success_frame, (0, h - 80), (w, h), (0, 140, 0), -1)
                         cv2.putText(success_frame, f"SAVED photo #{captured_count}! Change angle and press [SPACE] for next.", (15, h - 30),
                                     cv2.FONT_HERSHEY_SIMPLEX, 0.65, (255, 255, 255), 2)
-                        cv2.imshow(window_name, success_frame)
+                        self._show_frame(window_name, success_frame)
                         cv2.waitKey(600)
                         break
 
@@ -196,7 +211,7 @@ class PersonRecognizer:
                         cv2.rectangle(discard_frame, (0, h - 80), (w, h), (0, 0, 180), -1)
                         cv2.putText(discard_frame, "Photo discarded. Re-align angle and press [SPACE] again.", (15, h - 30),
                                     cv2.FONT_HERSHEY_SIMPLEX, 0.65, (255, 255, 255), 2)
-                        cv2.imshow(window_name, discard_frame)
+                        self._show_frame(window_name, discard_frame)
                         cv2.waitKey(600)
                         break
 
@@ -214,7 +229,7 @@ class PersonRecognizer:
             confirm_frame = frame.copy()
             cv2.putText(confirm_frame, f"Registered '{name}' ({total_photos_now} total photos)!", (20, 50),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 0), 2)
-            cv2.imshow(window_name, confirm_frame)
+            self._show_frame(window_name, confirm_frame)
             cv2.waitKey(800)
             return True
         else:
@@ -270,43 +285,118 @@ class PersonRecognizer:
         for idx, d in enumerate(detections, 1):
             print(f"    {idx}. Person: {d['name']} | Confidence: {d['confidence']:.2f}")
 
-    def start_webcam(self, camera_index=0):
-        """Run real-time face recognition from a webcam with on-the-fly enrollment support."""
+    def _show_frame(self, window_name: str, frame: np.ndarray, max_w: int = 1280, max_h: int = 720):
+        """Helper to fit display frame proportionally to monitor screen bounds without distortion."""
+        h, w = frame.shape[:2]
+        scale = min(max_w / float(w), max_h / float(h), 1.0)
+        if scale < 1.0:
+            resized = cv2.resize(frame, (int(w * scale), int(h * scale)), interpolation=cv2.INTER_AREA)
+            cv2.imshow(window_name, resized)
+        else:
+            cv2.imshow(window_name, frame)
+
+    def start_webcam(self, camera_source=0, rotation: int = 0):
+        """
+        Run real-time face recognition from a webcam or mobile IP camera feed.
+        :param camera_source: Integer (0, 1 for webcam) or String (e.g. 'http://192.168.137.130:8080/' for Mobile IP Camera)
+        :param rotation: Stream rotation angle (0, 90, 180, 270 degrees)
+        """
         window_name = "InsightFace - Realtime Recognition"
-        print(f"[*] Starting webcam (device {camera_index})...")
-        print("[*] Controls: Press 'e' or 'n' to Enroll a new person | Press 'q' to Exit.")
         
-        cap = cv2.VideoCapture(camera_index)
+        # Convert numeric string to int if needed
+        if isinstance(camera_source, str):
+            camera_source = camera_source.strip()
+            if camera_source.isdigit():
+                camera_source = int(camera_source)
+            elif camera_source.startswith(("http://", "https://", "rtsp://")):
+                # Auto-append '/video' for IP Webcam endpoints if missing
+                url_clean = camera_source.rstrip('/')
+                if not url_clean.endswith(('/video', '.mjpeg', '.mp4', '/shot.jpg')):
+                    camera_source = url_clean + '/video'
+                    print(f"[*] Auto-formatted stream URL for OpenCV -> {camera_source}")
+
+        print(f"\n[*] Connecting to camera source: {camera_source}...")
+        print("[*] Controls: Press 'e' or 'n' to Enroll  |  Press 'r' to Rotate Stream  |  Press 'q' to Exit.")
+        
+        cap = cv2.VideoCapture(camera_source)
         if not cap.isOpened():
-            print(f"[-] Cannot open webcam {camera_index}")
-            return
+            if isinstance(camera_source, int):
+                print(f"[-] Cannot open webcam device {camera_source}. Scanning fallback devices...")
+                for idx in [0, 1, 2, 3]:
+                    if idx == camera_source:
+                        continue
+                    cap = cv2.VideoCapture(idx)
+                    if cap.isOpened():
+                        print(f"[+] Successfully connected to webcam device {idx}")
+                        camera_source = idx
+                        break
+                else:
+                    print("[-] No accessible webcam devices found.")
+                    return
+            else:
+                print(f"[-] Could not connect to camera stream URL: '{camera_source}'")
+                print("    Make sure your mobile phone and PC are on the same Wi-Fi network!")
+                print("    Ensure IP Webcam server is STARTED on your mobile app.")
+                return
+
+        # Initialize resizable OpenCV window
+        cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
+        cv2.resizeWindow(window_name, 960, 540)
+
+        prev_time = time.time()
+        fps = 0.0
+        rotation_angle = int(rotation) % 360
 
         while True:
             ret, frame = cap.read()
             if not ret:
-                print("[-] Failed to capture frame.")
+                print("[-] Failed to capture frame from camera stream.")
                 break
+
+            # Apply stream rotation if requested
+            if rotation_angle == 90:
+                frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
+            elif rotation_angle == 180:
+                frame = cv2.rotate(frame, cv2.ROTATE_180)
+            elif rotation_angle == 270:
+                frame = cv2.rotate(frame, cv2.ROTATE_90_COUNTERCLOCKWISE)
+
+            curr_time = time.time()
+            time_diff = curr_time - prev_time
+            if time_diff > 0:
+                fps = 1.0 / time_diff
+            prev_time = curr_time
 
             annotated_frame, detections = self.recognize_frame(frame)
 
-            # Draw bottom control bar / guide
             h, w, _ = annotated_frame.shape
+
+            # Draw top-right FPS & Rotation display
+            fps_text = f"FPS: {fps:.1f} | Rot: {rotation_angle}°"
+            cv2.putText(annotated_frame, fps_text, (w - 220, 25),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.55, (0, 255, 0), 2)
+
+            # Draw bottom control bar / guide
             cv2.rectangle(annotated_frame, (0, h - 30), (w, h), (30, 30, 30), -1)
-            cv2.putText(annotated_frame, "Press [e] Enroll / Add Photos  |  Press [q] Quit", (15, h - 10),
+            cv2.putText(annotated_frame, "Press [e] Enroll  |  Press [r] Rotate  |  Press [q] Quit", (15, h - 10),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.5, (220, 220, 220), 1)
 
-            cv2.imshow(window_name, annotated_frame)
+            self._show_frame(window_name, annotated_frame)
             key = cv2.waitKey(1) & 0xFF
 
             if key == ord('q'):
                 break
+            elif key in (ord('r'), ord('R')):
+                rotation_angle = (rotation_angle + 90) % 360
+                print(f"[*] Rotated stream orientation to: {rotation_angle}°")
+
             elif key in (ord('e'), ord('E'), ord('n'), ord('N')):
                 # Show pause overlay on video
                 pause_frame = annotated_frame.copy()
                 cv2.rectangle(pause_frame, (50, h // 2 - 35), (w - 50, h // 2 + 35), (0, 0, 0), -1)
                 cv2.putText(pause_frame, "ENROLLMENT: Switch to terminal to enter name", (60, h // 2 + 8),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 255), 2)
-                cv2.imshow(window_name, pause_frame)
+                self._show_frame(window_name, pause_frame)
                 cv2.waitKey(1)
 
                 print("\n" + "=" * 50)
@@ -315,31 +405,63 @@ class PersonRecognizer:
                 print("=" * 50)
 
                 if new_person_name:
-                    self.enroll_live_person(new_person_name, cap, window_name=window_name)
+                    self.enroll_live_person(new_person_name, cap, window_name=window_name, rotation=rotation_angle)
                 else:
-                    print("[*] Enrollment cancelled. Resuming webcam...")
+                    print("[*] Enrollment cancelled. Resuming camera stream...")
 
         cap.release()
         cv2.destroyAllWindows()
-        print("[*] Webcam closed.")
+        print("[*] Camera stream closed.")
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="InsightFace Real-Time CPU Face Recognizer")
+    parser.add_argument("--mode", choices=["webcam", "image"], help="Mode: 'webcam' or 'image'")
+    parser.add_argument("--image", type=str, help="Path to test image file (for mode=image)")
+    parser.add_argument("--camera", type=str, default="0", help="Webcam index (e.g. 0) or IP stream URL (e.g. http://192.168.137.130:8080/)")
+    parser.add_argument("--rotate", type=int, choices=[0, 90, 180, 270], default=0, help="Rotate stream angle: 0, 90, 180, or 270 degrees")
+    args = parser.parse_args()
+
     recognizer = PersonRecognizer(known_faces_dir="known_faces")
     recognizer.load_known_faces()
 
-    print("\n--- InsightFace CPU Recognizer (copy_updated) ---")
-    print("1. Start Live Webcam Recognition (with Dynamic 'e' Enrollment)")
-    print("2. Test on an Image File")
-    print("3. Exit")
-    
-    choice = input("Select option (1/2/3): ").strip()
-
-    if choice == "1":
-        recognizer.start_webcam(camera_index=0)
-    elif choice == "2":
-        img_path = input("Enter path to test image (e.g. test.jpg): ").strip()
-        if img_path:
-            recognizer.recognize_image_file(img_path)
+    if args.mode == "webcam":
+        recognizer.start_webcam(camera_source=args.camera, rotation=args.rotate)
+    elif args.mode == "image":
+        if args.image:
+            recognizer.recognize_image_file(args.image)
+        else:
+            img_path = input("Enter path to test image (e.g. test.jpg): ").strip()
+            if img_path:
+                recognizer.recognize_image_file(img_path)
     else:
-        print("Exiting.")
+        print("\n" + "=" * 60)
+        print("         InsightFace Real-Time Face Recognition Engine")
+        print("=" * 60)
+        print("Select Camera / Source:")
+        print("  1. Default Desktop / Laptop Webcam (Index 0)")
+        print("  2. Mobile IP Camera (e.g. http://192.168.137.130:8080/)")
+        print("  3. Test on a Static Image File")
+        print("  4. Exit")
+        print("=" * 60)
+        
+        choice = input("Select option (1/2/3/4) or paste Mobile URL directly: ").strip()
+
+        if choice == "1" or choice == "":
+            recognizer.start_webcam(camera_source=0, rotation=args.rotate)
+        elif choice == "2":
+            url_in = input("\nEnter Mobile Camera URL (e.g. http://192.168.137.130:8080/): ").strip()
+            if url_in:
+                recognizer.start_webcam(camera_source=url_in, rotation=args.rotate)
+            else:
+                print("[!] No URL entered. Defaulting to webcam 0.")
+                recognizer.start_webcam(camera_source=0, rotation=args.rotate)
+        elif choice.startswith(("http://", "https://", "rtsp://")):
+            # User pasted URL directly at main prompt
+            recognizer.start_webcam(camera_source=choice, rotation=args.rotate)
+        elif choice == "3":
+            img_path = input("Enter path to test image (e.g. test.jpg): ").strip()
+            if img_path:
+                recognizer.recognize_image_file(img_path)
+        else:
+            print("Exiting.")

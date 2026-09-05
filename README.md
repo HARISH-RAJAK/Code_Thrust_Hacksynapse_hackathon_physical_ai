@@ -114,11 +114,12 @@ You will see an interactive menu:
 Select option (1/2/3): 
 ```
 
-### Option 1: Live Webcam Recognition & Dynamic Enrollment
-- **Live HUD Display**: Real-time bounding boxes with detected names and confidence scores.
+### Option 1: Live Webcam / Mobile IP Camera Recognition & Dynamic Enrollment
+- **Live HUD Display**: Real-time bounding boxes with detected names, confidence scores, FPS, and stream orientation angle.
 - **Controls & Hotkeys**:
   | Key | Action |
   | :--- | :--- |
+  | **`r`** | **Rotate Stream Orientation** (`0° -> 90° -> 180° -> 270°`) live on-the-fly |
   | **`e`** / **`n`** | **Trigger Live Enrollment** (Enter person's name in terminal) |
   | **`SPACE`** / **`c`** | **Capture Angle** during enrollment mode |
   | **`y`** | **Accept & Save** captured photo |
