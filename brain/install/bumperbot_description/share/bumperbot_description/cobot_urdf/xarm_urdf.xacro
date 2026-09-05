@@ -1,0 +1,429 @@
+<?xml version="1.0"?>
+<robot name="my_robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+
+  <xacro:include filename="$(find bumperbot_description)/cobot_urdf/common_properties.xacro" />
+
+  <material name="Orange">
+    <color rgba="1.0 0.5 0.0 1.0" />
+  </material>
+  
+  <material name="yellow">
+    <color rgba="1.0 1.0 0.0 1.0" />
+  </material>
+
+    <!-- <link name="base_footprint" /> -->
+    <link name="base_Link">
+        <visual>
+            <geometry>
+                <mesh filename="file://$(find bumperbot_description)/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <material name="Orange" />
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="file://$(find bumperbot_description)/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+        </collision>
+        <inertial>
+            <mass value="10.6644929679243374"/>
+            <origin xyz="-0.003348274822226489 -4.457765549128597e-05 0.031108613282001457" rpy="0 0 0"/>
+            <inertia ixx="0.000975" iyy="0.001164" izz="0.00175" ixy="1e-06" iyz="1e-06" ixz="4e-06"/>
+        </inertial>
+    </link>
+
+    <link name="Link_1_1">
+        <visual>
+            <geometry>
+                <mesh filename="file://$(find bumperbot_description)/meshes/Link_1_1.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+            <origin xyz="0.0 0.0 -0.05157" rpy="0 0 0" />
+            <material name="yellow" />
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="file://$(find bumperbot_description)/meshes/Link_1_1.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+            <origin xyz="0.0 0.0 -0.05157" rpy="0 0 0" />
+        </collision>
+        <inertial>
+            <mass value="0.5742300530268866"/>
+            <origin xyz="-0.0002094572914486825 0.00033317796147965597 0.01593296799246819" rpy="0 0 0"/>
+            <inertia ixx="0.000342" iyy="0.000362" izz="0.000522" ixy="1e-06" iyz="-3e-06" ixz="1e-06"/>
+        </inertial>
+    </link>
+
+
+
+
+
+
+    <link name="Link_2_1">
+        <visual>
+            <geometry>
+                <mesh filename="file://$(find bumperbot_description)/meshes/Link_2_1.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+            <origin xyz="0.011352 -0.0197 -0.08217" />
+            <material name="Orange" />
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="file://$(find bumperbot_description)/meshes/Link_2_1.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+            <origin xyz="0.011352 -0.0197 -0.08217" rpy="0 0 0" />
+        </collision>
+        <inertial>
+            <mass value="0.1455717481960074"/>
+            <origin xyz="-2.3791800149788878e-08 -0.019712394499864273 0.04970508367650449" rpy="0 0 0"/>
+            <inertia ixx="0.000136" iyy="0.000116" izz="3.6e-05" ixy="0.0" iyz="0.0" ixz="0.0"/>
+        </inertial>
+    </link>
+
+
+
+    <link name="Link_3_1">
+        <visual>
+            <geometry>
+                <mesh filename="file://$(find bumperbot_description)/meshes/Link_3_1.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+            <origin xyz="0.011352 -0.019288 -0.17857" />
+            <material name="Orange" />
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="file://$(find bumperbot_description)/meshes/Link_3_1.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+            <origin xyz="0.011352 -0.019288 -0.17857" rpy="0 0 0" />
+        </collision>
+        <inertial>
+            <mass value="0.26324978747418754"/>
+            <origin xyz="-7.122857870788327e-06 -0.018581014253473322 0.017097769799803042" rpy="0 0 0"/>
+            <inertia ixx="0.0001" iyy="9.4e-05" izz="2.8e-05" ixy="0.0" iyz="2e-06" ixz="0.0"/>
+        </inertial>
+    </link>    
+
+
+    <link name="Link_4_1">
+        <visual>
+            <geometry>
+                <mesh filename="file://$(find bumperbot_description)/meshes/Link_4_1.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+            <origin xyz="0.01139 2.5e-05 -0.236881" rpy="0 0 0"/>
+            <material name="Orange" />
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="file://$(find bumperbot_description)/meshes/Link_4_1.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+            <origin xyz="0.01139 2.5e-05 -0.236881" rpy="0 0 0" />
+        </collision>
+        <inertial>
+            <mass value="0.22564506273767437"/>
+            <origin xyz="3.6127901348067745e-05 0.0008733043177863664 0.025400027960974403" rpy="0 0 0"/>
+            <inertia ixx="5.6e-05" iyy="4.9e-05" izz="2.6e-05" ixy="0.0" iyz="-1e-06" ixz="0.0"/>
+        </inertial>
+    </link>
+
+
+
+    <link name="Link_5_1">
+        <visual>
+            <geometry>
+                <mesh filename="file://$(find bumperbot_description)/meshes/Link_5_1.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+            <origin xyz="0.011352 -0.0197 -0.274285" rpy="0 0 0" />
+            <material name="Orange" />
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="file://$(find bumperbot_description)/meshes/Link_5_1.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+            <origin xyz="0.011352 -0.0197 -0.274285" rpy="0 0 0" />
+        </collision>
+        <inertial>
+            <origin xyz="-0.009148454843216183 -0.01971246032678109 0.03620196648707186" rpy="0 -0.515 0"/>
+            <mass value="0.2700592895350034"/>
+            <inertia ixx="6.6e-05" iyy="8e-05" izz="7.1e-05" ixy="0.0" iyz="0.0" ixz="4e-06"/>
+        </inertial>
+    </link>
+
+
+    <link name="gripper_base_1">
+        <visual>
+            <geometry>
+                <mesh filename="file://$(find bumperbot_description)/meshes/gripper_base_1.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+            <origin xyz="0.011002 1.3e-05 -0.329946" rpy="0 0 0" />
+            <material name="Orange" />
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="file://$(find bumperbot_description)/meshes/gripper_base_1.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+            <origin xyz="0.011002 1.3e-05 -0.329946" rpy="0 0 0" />
+        </collision>
+        <inertial>
+            <origin xyz="-0.001081001995750704 4.999553741422562e-07 0.03187603841232539" rpy="0 0 0"/>
+            <mass value="0.03250334179699039"/>
+            <inertia ixx="1.1e-05" iyy="1.5e-05" izz="5e-06" ixy="0.0" iyz="0.0" ixz="0.0"/>
+        </inertial>
+    </link>
+
+
+
+
+    <link name="finger_1_1">
+        <visual>
+            <geometry>
+                <mesh filename="file://$(find bumperbot_description)/meshes/finger_1_1.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+            <origin xyz="-0.002548 0.001513 -0.367996" rpy="0 0 0"  />
+            <material name="Orange" />
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="file://$(find bumperbot_description)/meshes/finger_1_1.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+            <origin xyz="-0.002548 0.001513 -0.367996" rpy="0 0 0" />
+        </collision>
+        <inertial>
+            <origin xyz="0.001966971875994117 -0.0014995000446259943 0.005124235992251369" rpy="0 0 0"/>
+            <mass value="0.01630298468358439"/>
+            <inertia ixx="2e-06" iyy="1e-06" izz="2e-06" ixy="0.0" iyz="0.0" ixz="0.0"/>
+        </inertial>
+    </link>
+
+
+
+
+
+
+    <link name="finger_2_1">
+        <visual>
+            <geometry>
+                <mesh filename="file://$(find bumperbot_description)/meshes/finger_2_1.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+            <origin xyz="0.024452 0.001513 -0.367996" rpy="0 0 0"  />
+            <material name="Orange" />
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="file://$(find bumperbot_description)/meshes/finger_2_1.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+            <origin xyz="0.024452 0.001513 -0.367996" rpy="0 0 0"  />
+        </collision>
+        <inertial>
+            <origin xyz="-0.0007608779393055883 -0.0014995000500236202 0.005122395959460624" rpy="0 0 0"/>
+            <mass value="0.01672496232433782"/>
+            <inertia ixx="2e-06" iyy="1e-06" izz="2e-06" ixy="0.0" iyz="0.0" ixz="0.0"/>
+        </inertial>
+    </link>
+
+
+
+
+
+
+
+
+    <link name="Gripper_end_1_1">
+        <visual>
+            <geometry>
+                <mesh filename="file://$(find bumperbot_description)/meshes/Gripper_end_1_1.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+            <origin xyz="-0.013657 0.001513 -0.396937" rpy="0 0 0" />
+            <material name="Orange" />
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="file://$(find bumperbot_description)/meshes/Gripper_end_1_1.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+            <origin xyz="-0.013657 0.001513 -0.396937" rpy="0 0 0" />
+        </collision>
+        <inertial>
+            <origin xyz="-0.008709267199550398 0.0015004999553736196 0.023308296150939045" rpy="0 0 0"/>
+            <mass value="0.012557670523597225"/>
+            <inertia ixx="3e-06" iyy="4e-06" izz="1e-6" ixy="-0.0" iyz="0.0" ixz="1e-06"/>
+        </inertial>
+    </link>
+
+
+
+
+
+
+
+    <link name="Gripper_end_2_1">
+        <visual>
+            <geometry>
+                <mesh filename="file://$(find bumperbot_description)/meshes/Gripper_end_2_1.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+            <origin xyz="0.03173 0.001513 -0.398118" rpy="0 0 0" />
+            <material name="Orange" />
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="file://$(find bumperbot_description)/meshes/Gripper_end_2_1.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+            <origin xyz="0.03173 0.001513 -0.398118" rpy="0 0 0" />
+        </collision>
+        <inertial>
+            <origin xyz="0.008709194843970345 0.0015004999553735558 0.023308701233581364" rpy="0 0 0"/>
+            <mass value="0.012557670523597225"/>
+            <inertia ixx="3e-06" iyy="4e-06" izz="1e-6" ixy="0.0" iyz="0.0" ixz="-1e-06"/>
+        </inertial>
+    </link>    
+
+
+
+    <!-- <joint name="base_joint" type="fixed">
+        <parent link="base_footprint" />
+        <child link="base_Link" />
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <dynamics friction="0.5" damping="0.7" />
+    </joint> -->
+
+    <joint name="base_to_Link1" type="revolute">
+        <parent link="base_Link" />
+        <child link="Link_1_1" />
+        <origin xyz="0.0 0.0 0.05157" rpy="0 0 0" />
+        <axis xyz="0.0 0.0 1.0" />
+        <limit upper="2.0943" lower="-2.0943" effort="100" velocity="1.0"/>
+        <dynamics friction="1.5" damping="0.7" />
+    </joint>
+
+
+
+
+
+
+
+
+    <joint name="Link1_to_Link2" type="revolute">
+        <parent link="Link_1_1" />
+        <child link="Link_2_1" />
+        <origin xyz="-0.011352 0.0197 0.0306" rpy="0 0 0" />
+        <axis xyz="-0.0 1.0 0.0" />
+        <limit upper="1.570796" lower="-1.570796" effort="100" velocity="1.0"/>
+        <dynamics friction="3.0" damping="0.5" />
+    </joint>
+
+
+
+    <joint name="Link2_to_Link3" type="revolute">
+        <parent link="Link_2_1" />
+        <child link="Link_3_1" />
+        <origin xyz="0.0 -0.000412 0.0964" rpy="0 0 0" />
+        <axis xyz="-0.0 1.0 0.0" />
+        <limit upper="2.35619" lower="-2.35619" effort="100" velocity="1.0"/>
+        <dynamics friction="0.4" damping="0.3" />
+    </joint>
+
+
+
+    <joint name="Link3_4_Bridge" type="fixed">
+        <parent link="Link_3_1" />
+        <child link="Link_4_1" />
+        <origin xyz="3.8e-05 -0.019313 0.058311" rpy="0 0 0" />
+    </joint>
+
+
+
+
+<!-- ########################################### -->
+
+
+    <joint name="Linkt_to_Link5" type="revolute">
+        <parent link="Link_4_1" />
+        <child link="Link_5_1" />
+        <origin xyz="3.8e-05 0.019725 0.037404" rpy="0 0 0" />
+        <axis xyz="0.0 1.0 0.0" />
+        <limit upper="1.8849" lower="-1.8849" effort="100" velocity="1.0"/>
+        <dynamics friction="0.2" damping="0.2" />
+    </joint>
+
+
+
+
+
+
+<!-- ########################################### -->
+
+
+    <joint name="Link5_to_gripperbase" type="revolute">
+        <parent link="Link_5_1" />
+        <child link="gripper_base_1" />
+        <origin xyz="0.00035 -0.019713 0.055661" rpy="0 0 1.57" />
+        <axis xyz="0.0 0.0 1.0" />
+        <limit upper="1.9198" lower="-1.9198" effort="100" velocity="1.0"/>
+        <dynamics friction="0.15" damping="0.2" />
+    </joint>
+
+
+
+
+    <link name="target_link" />
+
+        <joint name="target_joint" type="fixed">
+            <parent link="gripper_base_1" />
+            <child link="target_link" />
+            <origin xyz="0 0 0.07" rpy="0 0 0"/>
+        </joint>
+
+
+
+
+
+    <joint name="gripper_finger1_joint" type="revolute">
+        <parent link="gripper_base_1" />
+        <child link="finger_1_1" />
+        <origin xyz="0.01355 -0.0015 0.03805" rpy="0 0 0" />
+        <axis xyz="0.0 1.0 0.0" />
+        <limit lower="0.0" upper="1.25654" effort="100" velocity="100"/>
+        <dynamics friction="0.25" damping="0.1" />
+
+    </joint>
+
+    <joint name="gripper_finger2_joint" type="revolute">
+        <parent link="gripper_base_1" />
+        <child link="finger_2_1" />
+        <origin xyz="-0.01345 -0.0015 0.03805" rpy="0 0 0" />
+        <axis xyz="0.0 1.0 0.0" />
+        <mimic joint="gripper_finger1_joint" multiplier="-1.0"/>
+        <limit lower="-1.25654" upper="0.0" effort="100" velocity="100"/>
+        <dynamics friction="0.25" damping="0.1" />
+
+    </joint>
+
+
+
+
+
+
+
+
+
+
+    <joint name="Rigid10" type="fixed">
+        <parent link="finger_1_1" />
+        <child link="Gripper_end_1_1" />
+        <origin xyz="0.011109 0.0 0.028941" rpy="0 0 0" />
+    </joint>
+
+
+
+
+
+
+
+
+
+    <joint name="Rigid11" type="fixed">
+        <parent link="finger_2_1" />
+        <child link="Gripper_end_2_1" />
+        <origin xyz="-0.007278 0.0 0.030122" rpy="0 0 0" />
+    </joint>                                
+
+</robot>

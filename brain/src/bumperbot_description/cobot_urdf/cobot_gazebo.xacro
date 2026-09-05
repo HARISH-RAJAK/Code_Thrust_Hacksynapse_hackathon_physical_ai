@@ -1,0 +1,355 @@
+<?xml version="1.0"?>
+
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+
+
+    <!-- <gazebo>
+        <plugin 
+            filename="gz-sim-diff-drive-system" 
+            name="gz::sim::systems::DiffDrive">
+            <left_joint>wheel_left_joint</left_joint>
+            <right_joint>wheel_right_joint</right_joint>
+            <wheel_separation>0.17</wheel_separation>
+            <wheel_radius>0.033</wheel_radius>
+            <frame_id>odom</frame_id>
+            <child_frame_id>base_footprint</child_frame_id>
+        </plugin>
+    </gazebo> -->
+
+    <!-- <gazebo>   
+        <plugin 
+            filename="gz-sim-joint-state-publisher-system" 
+            name="gz::sim::systems::JointStatePublisher">
+            <joint_name>wheel_left_joint</joint_name>
+            <joint_name>wheel_right_joint</joint_name>
+        </plugin>
+    </gazebo> -->
+
+  <gazebo reference="navsat_link">
+      <sensor name="navsat" type="navsat">
+      <always_on>1</always_on>
+      <update_rate>1</update_rate>
+      <topic>navsat</topic>
+      <gz_frame_id>navsat_link</gz_frame_id>
+      <navsat>
+            <position_sensing>
+              <horizontal>
+                <noise type="gaussian">
+                  <mean>0.0</mean>
+                  <stddev>0.0</stddev>
+                </noise>
+              </horizontal>
+              <vertical>
+                <noise type="gaussian">
+                  <mean>0.0</mean>
+                  <stddev>0.0</stddev>
+                </noise>
+              </vertical>
+            </position_sensing>
+          </navsat>      
+      </sensor>
+  </gazebo>
+
+  <gazebo>
+    <plugin
+      filename="gz-sim-navsat-system"
+      name="gz::sim::systems::NavSat">
+    </plugin>
+  </gazebo>
+
+  <gazebo>
+        <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu">
+        </plugin>   
+        <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
+        <render_engine>ogre2</render_engine>
+      </plugin>      
+  </gazebo>
+  <gazebo reference="wheel_left_link">
+    <mu1>1000000000000000.0</mu1>
+    <mu2>1000000000000000.0</mu2>
+    <kp>1000000000000.0</kp>
+    <kd>10.0</kd>
+    <minDepth>0.001</minDepth>
+    <maxVel>0.1</maxVel>
+    <fdir1>1 0 0</fdir1>
+  </gazebo>
+
+  <gazebo reference="wheel_right_link">
+    <mu1>1000000000000000.0</mu1>
+    <mu2>1000000000000000.0</mu2>
+    <kp>1000000000000.0</kp>
+    <kd>10.0</kd>
+    <minDepth>0.001</minDepth>
+    <maxVel>0.1</maxVel>
+    <fdir1>1 0 0</fdir1>
+  </gazebo>
+    
+  <!-- Caster Wheels -->
+  <gazebo reference="caster_rear_link">
+    <mu1>0.1</mu1>
+    <mu2>0.1</mu2>
+    <kp>1000000.0</kp>
+    <kd>100.0</kd>
+    <minDepth>0.001</minDepth>
+    <maxVel>1.0</maxVel>
+  </gazebo>
+    
+  <gazebo reference="caster_front_link">
+    <mu1>0.1</mu1>
+    <mu2>0.1</mu2>
+    <kp>1000000.0</kp>
+    <kd>100.0</kd>
+    <minDepth>0.001</minDepth>
+    <maxVel>1.0</maxVel>
+  </gazebo>
+
+  <!-- IMU -->
+  <gazebo reference="imu_link">
+    <sensor name="imu" type="imu">
+        <always_on>true</always_on>
+        <update_rate>50</update_rate>
+        <gz_frame_id>imu_link</gz_frame_id>
+        <topic>imu</topic>
+        <imu>
+          <angular_velocity>
+            <x>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>2e-4</stddev>
+              </noise>
+            </x>
+            <y>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>2e-4</stddev>
+              </noise>
+            </y>
+            <z>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>2e-4</stddev>
+              </noise>
+            </z>
+          </angular_velocity>
+          <linear_acceleration>
+            <x>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>1.7e-2</stddev>
+              </noise>
+            </x>
+            <y>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>1.7e-2</stddev>
+              </noise>
+            </y>
+            <z>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>1.7e-2</stddev>
+              </noise>
+            </z>
+          </linear_acceleration>
+        </imu>
+    </sensor>
+  </gazebo>
+
+  <!-- 2D Laser Sensor -->
+  <gazebo reference="laser_link">
+    <sensor name="lidar" type="gpu_lidar">
+      <always_on>true</always_on>
+      <visualize>true</visualize>
+      <topic>scan</topic>
+      <update_rate>20</update_rate>
+      <gz_frame_id>laser_link</gz_frame_id>
+      <lidar>
+        <scan>
+          <horizontal>
+            <samples>360</samples>
+            <resolution>1.00000</resolution>
+            <min_angle>0.000000</min_angle>
+            <max_angle>6.280000</max_angle>
+          </horizontal>
+          <vertical>
+            <samples>1</samples>
+          </vertical>
+        </scan>
+        <range>
+          <min>0.120000</min>
+          <max>12.0</max>
+          <resolution>0.02</resolution>
+        </range>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.01</stddev>
+        </noise>
+      </lidar>
+    </sensor>
+  </gazebo>
+
+
+              <!-- 3D VELODYNE LIDAR PLUGIN -->
+
+  <!-- <gazebo reference="laser_link">
+      <sensor name="velodyne-VLP16" type="gpu_lidar">
+          <topic>velodyne_points</topic>
+          <update_rate>10</update_rate>
+          <gz_frame_id>laser_link</gz_frame_id>
+          <lidar>
+              <scan>
+                  <horizontal>
+                      <samples>440</samples>
+                      <resolution>1</resolution>
+                      <min_angle>-3.14159</min_angle>
+                      <max_angle>3.14159</max_angle>
+                  </horizontal>
+                  <vertical>
+                      <samples>16</samples>
+                      <resolution>1</resolution>
+                      <min_angle>-0.261799</min_angle>
+                      <max_angle>0.261799</max_angle>
+                  </vertical>
+              </scan>
+              <range>
+                  <min>0.5</min>
+                  <max>131.0</max>
+                  <resolution>0.001</resolution>
+              </range>
+              <noise>
+                  <type>gaussian</type>
+                  <mean>0.0</mean>
+                  <stddev>0.008</stddev>
+              </noise>
+              <frame_id>velodyne</frame_id>
+          </lidar>
+          <visualize>true</visualize>
+
+          <always_on>1</always_on>
+      </sensor>
+  </gazebo> -->
+
+
+
+    <gazebo>
+        <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+          <parameters>/home/prateek-chawla/cobot/src/bumperbot_description/config/cobot_controllers.yaml</parameters>
+        </plugin>
+    </gazebo>
+
+    <ros2_control name="RobotSystem" type="system">
+        <hardware>
+            <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+        </hardware>
+        
+        <joint name="wheel_left_joint">
+            <command_interface name="velocity">
+              <param name="min">-1.0</param>
+              <param name="max">1.0</param>
+            </command_interface>
+            <state_interface name="position" />
+            <state_interface name="velocity" />
+        </joint>
+
+        <joint name="wheel_right_joint">
+            <command_interface name="velocity">
+              <param name="min">-1.0</param>
+              <param name="max">1.0</param>
+            </command_interface>
+            <state_interface name="position" />
+            <state_interface name="velocity" />
+        </joint>
+        
+
+
+        <joint name="base_to_Link1">
+            <command_interface name="position">
+            <param name="min">-2.356193</param>
+            <param name="max">2.356193</param>
+            </command_interface>
+            <state_interface name="position">
+                <!-- Set initial position here in radians -->
+                <param name="initial_value">1.57</param> 
+            </state_interface>            
+            <state_interface name="velocity"/>
+        </joint>
+
+        <joint name="Link1_to_Link2">
+            <command_interface name="position">
+            <param name="min">-1.570796</param>
+            <param name="max">1.570796</param>
+            </command_interface>
+            <state_interface name="position">
+                <!-- Set initial position here in radians -->
+                <param name="initial_value">1.571</param> 
+            </state_interface>           
+            <state_interface name="velocity"/>
+        </joint>
+
+        <joint name="Link2_to_Link3">
+            <command_interface name="position">
+            <param name="min">-2.268928</param>
+            <param name="max">2.268928</param>
+            </command_interface>
+            <state_interface name="position">
+                <!-- Set initial position here in radians -->
+                <param name="initial_value">0.0</param> 
+            </state_interface>            
+            <state_interface name="velocity"/>
+        </joint>
+
+        <joint name="Linkt_to_Link5">
+            <command_interface name="position">
+            <param name="min">-2.268928</param>
+            <param name="max">2.268928</param>
+            </command_interface>
+            <state_interface name="position">
+                <!-- Set initial position here in radians -->
+                <param name="initial_value">0.0</param> 
+            </state_interface>            
+            <state_interface name="velocity"/>
+        </joint>
+
+        <joint name="Link5_to_gripperbase">
+            <command_interface name="position">
+            <param name="min">-2.0944</param>
+            <param name="max">2.0944</param>
+            </command_interface>
+            <state_interface name="position"/>
+            <state_interface name="velocity"/>
+        </joint>
+
+        <joint name="gripper_finger1_joint">
+            <command_interface name="position">
+            <param name="min">0.0</param>
+            <param name="max">0.872665</param>
+            </command_interface>
+            <state_interface name="position"/>
+            <state_interface name="velocity"/>
+        </joint>
+
+
+            <!-- MIMIC JOINT -->
+        <joint name="gripper_finger2_joint">
+            <param name="mimic">
+                <joint>xarm_1_joint</joint>
+                <multiplier>-1</multiplier>
+            </param>
+            <param name="mimic">gripper_finger1_joint</param>
+            <param name="multiplier">-1</param>
+            <state_interface name="position"/>
+            <state_interface name="velocity"/>
+        </joint>        
+
+        <!-- <joint name="gripper_finger2_joint">
+            <command_interface name="position">
+            <param name="min">-0.872665</param>
+            <param name="max">0.0</param>
+            </command_interface>
+            <state_interface name="position"/>
+        </joint> -->
+    </ros2_control>    
+
+</robot>

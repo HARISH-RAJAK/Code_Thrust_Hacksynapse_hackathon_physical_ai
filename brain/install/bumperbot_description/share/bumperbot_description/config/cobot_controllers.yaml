@@ -1,0 +1,114 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 50
+
+    bumperbot_controller:
+      type: diff_drive_controller/DiffDriveController
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    hiwonder_xarm_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+
+
+bumperbot_controller:
+  ros__parameters:
+    use_stamped_vel: true
+    left_wheel_names: ['wheel_left_joint']
+    right_wheel_names: ['wheel_right_joint']
+
+    publish_rate: 50.0
+
+    pose_covariance_diagonal: [0.001, 0.001, 0.001, 0.001, 0.001, 0.01]
+    twist_covariance_diagonal: [0.001, 0.001, 0.001, 0.001, 0.001, 0.01]
+
+    wheel_separation: 0.34
+    wheel_radius: 0.0516
+
+    wheel_separation_multiplier: 1.0
+    left_wheel_radius_multiplier: 1.0
+    right_wheel_radius_multiplier: 1.0
+
+    cmd_vel_timeout: 0.5
+
+    base_frame_id: base_footprint
+
+    publish_limited_velocity: true
+    publish_wheel_data: true
+    enable_odom_tf: true
+
+    linear:
+      x:
+        has_velocity_limits: true
+        max_velocity: 0.7
+        min_velocity: -0.7
+        has_acceleration_limits: true
+        max_acceleration: 0.7
+        min_acceleration: -0.7
+
+    angular:
+      z:
+        has_velocity_limits: true
+        max_velocity: 8.5
+        min_velocity: -8.5
+        has_acceleration_limits: true
+        max_acceleration: 5.0
+        min_acceleration: -5.0
+
+hiwonder_xarm_controller:
+  ros__parameters:
+    joints:
+      - base_to_Link1
+      - Link1_to_Link2
+      - Link2_to_Link3
+      - Linkt_to_Link5
+      - Link5_to_gripperbase
+      - gripper_finger1_joint
+    
+    command_interfaces:
+      - position
+    
+    state_interfaces:
+      - position
+      - velocity
+
+
+
+    state_publish_rate: 50.0
+    action_monitor_rate: 20.0
+
+    allow_partial_joints_goal: false
+    open_loop_control: true
+    constraints:
+      stopped_velocity_tolerance: 0.01
+      goal_time: 0.0
+
+    # allow_partial_joints_goal: true
+    # constraints:
+    #   goal_time: 0.0
+
+    # interpolation_method: linear
+
+    
+    
+    # Trajectory constraints
+    # set rate monitoring period to 10ms
+    
+    # state_publish_rate: 10.0  # Hz
+    # action_monitor_rate: 5.0  # Hz
+
+
+    # constraints:
+    #   stopped_velocity_tolerance: 0.01
+    #   goal_time: 0.0
+    
+    # # Allow partial goals
+    # allow_partial_joints_goal: false
+    
+    # # Allow integrating velocity commands
+    # allow_integration_in_place: false
+    
+    # # Trajectory execution parameters
+    # allow_nonzero_velocity_at_trajectory_end: true        

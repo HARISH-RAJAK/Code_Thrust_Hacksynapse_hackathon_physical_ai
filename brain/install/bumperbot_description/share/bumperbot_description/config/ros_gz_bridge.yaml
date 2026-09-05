@@ -1,0 +1,67 @@
+- ros_topic_name: "/clock"
+  gz_topic_name: "/clock"
+  ros_type_name: "rosgraph_msgs/msg/Clock"
+  gz_type_name: "gz.msgs.Clock"
+  direction: GZ_TO_ROS
+
+
+- ros_topic_name: "/scan"
+  ros_type_name: "sensor_msgs/msg/LaserScan"
+  gz_type_name: "gz.msgs.LaserScan"
+  direction: GZ_TO_ROS
+
+- ros_topic_name: "/imu"
+  ros_type_name: "sensor_msgs/msg/Imu"
+  gz_type_name: "gz.msgs.IMU"
+  direction: GZ_TO_ROS
+
+- ros_topic_name: /navsat
+  gz_topic_name: /navsat
+  ros_type_name: sensor_msgs/msg/NavSatFix
+  gz_type_name: gz.msgs.NavSat
+  direction: GZ_TO_ROS
+
+# RGBD Camera topics
+- ros_topic_name: "camera/camera_info"
+  gz_topic_name: "camera/camera_info"
+  ros_type_name: "sensor_msgs/msg/CameraInfo"
+  gz_type_name: "gz.msgs.CameraInfo"
+  direction: GZ_TO_ROS
+  lazy: false # Determines whether connections are created immediately at startup (when false) or only when data is actually requested by a subscriber (when true), helping to conserve system resources at the cost of potential initial delays in data flow.
+
+- ros_topic_name: "camera/depth/points"
+  gz_topic_name: "/camera/points"
+  ros_type_name: "sensor_msgs/msg/PointCloud2"
+  gz_type_name: "gz.msgs.PointCloudPacked"
+  direction: GZ_TO_ROS
+
+# - ros_topic_name: "/velodyne_points"
+#   gz_topic_name: "/velodyne_points/points"
+#   ros_type_name: "sensor_msgs/msg/PointCloud2"
+#   gz_type_name: "gz.msgs.PointCloudPacked"
+#   direction: GZ_TO_ROS
+
+
+- ros_topic_name: "/camera/image"
+  gz_topic_name: "/camera/image"
+  ros_type_name: "sensor_msgs/msg/Image"
+  gz_type_name: "gz.msgs.Image"
+  direction: GZ_TO_ROS
+
+# ros2 topic pub --once /hiwonder_xarm_controller/joint_trajectory trajectory_msgs/msg/JointTrajectory "{
+#   joint_names: [
+#     'Link1_to_Link2',
+#     'Link2_to_Link3',
+#     'Link5_to_gripperbase',
+#     'Linkt_to_Link5',
+#     'base_to_Link1',
+#     'gripper_finger1_joint'
+#   ],
+#   points: [
+#     {
+#       positions: [1.571, 1.210, 0.0, -1.518, 0.034, 0.0],
+#       velocities: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+#       time_from_start: {sec: 3}
+#     }
+#   ]
+# }"
