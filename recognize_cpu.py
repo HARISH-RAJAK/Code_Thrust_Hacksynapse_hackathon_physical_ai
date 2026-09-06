@@ -122,13 +122,19 @@ class PersonRecognizer:
             display_frame = frame.copy()
             faces = self.app.get(frame)
 
-            # Draw detection bounding box
+            # Draw detection bounding box with bold label
             if len(faces) > 0:
                 face = max(faces, key=lambda f: (f.bbox[2] - f.bbox[0]) * (f.bbox[3] - f.bbox[1]))
                 bbox = face.bbox.astype(int)
-                cv2.rectangle(display_frame, (bbox[0], bbox[1]), (bbox[2], bbox[3]), (0, 255, 255), 2)
-                cv2.putText(display_frame, "Face Detected", (bbox[0], max(20, bbox[1] - 8)),
-                            cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 255), 2)
+                cv2.rectangle(display_frame, (bbox[0], bbox[1]), (bbox[2], bbox[3]), (0, 255, 255), 3)
+                
+                det_label = " Face Detected "
+                font = cv2.FONT_HERSHEY_SIMPLEX
+                font_scale = 0.9
+                (tw, th), bl = cv2.getTextSize(det_label, font, font_scale, 2)
+                ty = max(bbox[1] - 10, th + 10)
+                cv2.rectangle(display_frame, (bbox[0], ty - th - bl - 4), (bbox[0] + tw, ty + bl), (0, 255, 255), -1)
+                cv2.putText(display_frame, det_label, (bbox[0], ty - 2), font, font_scale, (0, 0, 0), 2, cv2.LINE_AA)
 
             # Top info bar
             cv2.rectangle(display_frame, (0, 0), (w, 60), (30, 30, 30), -1)
@@ -256,12 +262,28 @@ class PersonRecognizer:
                             best_name = name
 
             bbox = face.bbox.astype(int)
-            color = (0, 220, 0) if best_name != "Unknown" else (0, 0, 220)
-            cv2.rectangle(frame, (bbox[0], bbox[1]), (bbox[2], bbox[3]), color, 2)
+            color = (0, 230, 0) if best_name != "Unknown" else (0, 0, 230)
             
-            label = f"{best_name} ({best_score:.2f})"
-            cv2.putText(frame, label, (bbox[0], max(20, bbox[1] - 8)),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.6, color, 2)
+            # Thicker bounding box
+            cv2.rectangle(frame, (bbox[0], bbox[1]), (bbox[2], bbox[3]), color, 3)
+            
+            # Larger, bold name label with filled background banner
+            label = f" {best_name} ({best_score:.2f}) "
+            font = cv2.FONT_HERSHEY_SIMPLEX
+            font_scale = 0.95  # Significantly larger font size
+            thickness = 2
+
+            (text_w, text_h), baseline = cv2.getTextSize(label, font, font_scale, thickness)
+            text_x = bbox[0]
+            text_y = max(bbox[1] - 10, text_h + 10)
+
+            # Draw filled background box for high-contrast label
+            cv2.rectangle(frame, (text_x, text_y - text_h - baseline - 4),
+                          (text_x + text_w, text_y + baseline), color, -1)
+
+            # Draw text over background banner
+            text_color = (0, 0, 0) if best_name != "Unknown" else (255, 255, 255)
+            cv2.putText(frame, label, (text_x, text_y - 2), font, font_scale, text_color, thickness, cv2.LINE_AA)
 
             detections.append({
                 "name": best_name,
